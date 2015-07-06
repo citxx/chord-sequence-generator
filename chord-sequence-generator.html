@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Chord Sequence Generator</title>
+    <meta charset="utf-8"/>
+    <style>
+      .settings {
+        float: left;
+        border: solid 2px #dddddd;
+        background-color: #eeeeee;
+        width: 250px;
+        padding: 10px;
+        margin: 10px;
+      }
+
+      .settings h1 {
+        text-align: center;
+      }
+
+      #chords {
+        border: solid 1px black;
+        float: left;
+        margin: 10px;
+        padding: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="settings">
+      <h1>Settings</h1>
+      <p>Темп: <input type="number" name="tempo" value="120"/></p>
+      <p>
+        Переходы:
+        <br/><input type="checkbox" name="fifth-circle"/> Квинтовый круг
+        <br/><input type="checkbox" name="parallel"/> Параллельные тональности
+        <br/><input type="checkbox" name="contra-parallel"/> Противоположные тональности
+      </p>
+    </div>
+    <div id="chords">
+      lorem ipsum dolor
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/teoria.js"></script>
+    <script src="js/chord-sequence-generator.js"></script>
+  </body>
+</html>
