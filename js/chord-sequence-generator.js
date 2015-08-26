@@ -11,18 +11,12 @@ teoria.chord.random = function() {
   return teoria.chord(baseNote, chordType);
 };
 
-var ChordSequenceGenerator = function() {
-  this.tempo = 120;
+var RandomChordSequence = function() {
   this.fifthTransitions = true;
   this.parallelTonalityTransitions = false;
   this.oppositeTonalityTransitions = false;
-  this.callback = undefined;
   this.currentChord = undefined;
   this.nextChord = teoria.chord.random();
-
-  this.setTempo = function(tempo) {
-    this.tempo = tempo;
-  };
 
   this.setFifthTransitions = function(fifthTransitions) {
     this.fifthTransitions = fifthTransitions;
@@ -40,8 +34,29 @@ var ChordSequenceGenerator = function() {
     this.callback = callback;
   };
 
-  this.run = function() {
+  this.next = function() {
+    this.currentChord = this.nextChord;
+    this.nextChord = teoria.chord.random();
+    return this.currentChord;
   };
 };
 
-console.log(.toString());
+var ChordScroller = function(chordSequenceGenerator, tempo) {
+  this.chordGen = chordSequenceGenerator;
+  this.tempo = tempo;
+
+  this.setTempo = function(tempo) {
+    this.tempo = tempo;
+  };
+
+  this.run = function() {
+    var self = this;
+    setInterval(function() {
+      $('#chords').html(self.chordGen.next().toString());
+    }, 4 * 60 * 1000 / self.tempo);
+  };
+};
+
+var gen = new RandomChordSequence();
+var scroller = new ChordScroller(gen, 120);
+scroller.run();
