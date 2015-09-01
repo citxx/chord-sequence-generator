@@ -1,3 +1,5 @@
+"use strict";
+
 teoria.note.random = function() {
   var noteNames = ["Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "F#", "G"];
   var noteIndex = Math.floor(Math.random() * noteNames.length);
@@ -42,6 +44,8 @@ var RandomChordSequence = function() {
 };
 
 var ChordScroller = function(chordSequenceGenerator, tempo) {
+  self = this;
+
   this.chordGen = chordSequenceGenerator;
   this.tempo = tempo;
 
@@ -49,11 +53,39 @@ var ChordScroller = function(chordSequenceGenerator, tempo) {
     this.tempo = tempo;
   };
 
+  this.getNextChordLine = function() {
+    var chordsLine = [];
+    for (let i = 0; i < 4; ++i) {
+      chordsLine.push(this.chordGen.next().toString());
+    }
+    return chordsLine;
+  };
+
+  this.currentChordLine = this.getNextChordLine();
+  this.nextChordLine = this.getNextChordLine();
+
+  this.makeChordLineHtml = function(line) {
+    var html = $('<div>').addClass('chord-line');
+    for (let i = 0; i < line.length; ++i) {
+      $('<div>').addClass('chord').html(line[i]).appendTo(html);
+    }
+    return html;
+  };
+
+  function update() {
+      self.currentChordLine = self.nextChordLine;
+      self.nextChordLine = self.getNextChordLine();
+
+      $('#chords').empty().append(
+        self.makeChordLineHtml(self.currentChordLine)
+      ).append(
+        self.makeChordLineHtml(self.nextChordLine)
+      );
+  };
+
   this.run = function() {
-    var self = this;
-    setInterval(function() {
-      $('#chords').html(self.chordGen.next().toString());
-    }, 4 * 60 * 1000 / self.tempo);
+    update();
+    setInterval(update, 4 * 4 * 60 * 1000 / this.tempo);
   };
 };
 

@@ -19,3 +19,12 @@
   padding: 10px;
 }
 
+.chord-line {
+  padding: 40px;
+}
+
+.chord {
+  width: 150px;
+  display: inline-block;
+  font-size: 20pt;
+}
