@@ -13,18 +13,56 @@
 }
 
 #chords {
-  border: solid 1px black;
   float: left;
   margin: 10px;
   padding: 10px;
 }
 
+.current-chord {
+  background-color: #99ee99;
+}
+
+.played-chord {
+  color: #aaaaaa;
+}
+
 .chord-line {
-  padding: 40px;
+  height: 30px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 35px;
+  padding-bottom: 35px;
+  transition: top 0.5s, opacity 0.5s;
+}
+
+.chord-line-0 {
+  position: absolute;
+  top: -100px;
+  opacity: 0;
+}
+
+.chord-line-1 {
+  position: absolute;
+  top: 0px;
+}
+
+.chord-line-2 {
+  position: absolute;
+  top: 100px;
+}
+
+.chord-line-3 {
+  position: absolute;
+  top: 200px;
+  opacity: 0;
 }
 
 .chord {
   width: 150px;
   display: inline-block;
   font-size: 20pt;
+}
+
+#audioHide {
+  display: none;
 }

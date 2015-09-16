@@ -61,9 +61,6 @@ var ChordScroller = function(chordSequenceGenerator, tempo) {
     return chordsLine;
   };
 
-  this.currentChordLine = this.getNextChordLine();
-  this.nextChordLine = this.getNextChordLine();
-
   this.makeChordLineHtml = function(line) {
     var html = $('<div>').addClass('chord-line');
     for (let i = 0; i < line.length; ++i) {
@@ -73,22 +70,109 @@ var ChordScroller = function(chordSequenceGenerator, tempo) {
   };
 
   function update() {
-      self.currentChordLine = self.nextChordLine;
-      self.nextChordLine = self.getNextChordLine();
+      if (self.beatNumber % 4 == 0) {
+        Metronome.barClick();
+      } else {
+        Metronome.click();
+      }
+    
+      if (self.beatNumber > 0 && self.beatNumber % 16 == 0) {
+        self.linesHtml[0].remove();
 
-      $('#chords').empty().append(
-        self.makeChordLineHtml(self.currentChordLine)
-      ).append(
-        self.makeChordLineHtml(self.nextChordLine)
-      );
+        self.lines.splice(0, 1);
+        self.linesHtml.splice(0, 1);
+
+        var newLine = self.getNextChordLine();
+        var newLineHtml = self.makeChordLineHtml(newLine);
+
+        self.lines.push(newLine);
+        self.linesHtml.push(newLineHtml);
+
+        for (let i = 0; i < self.linesHtml.length; ++i) {
+          self.linesHtml[i].removeClass("chord-line-" + (i + 1)).addClass("chord-line-" + i);
+        }
+
+        $('#chords').append(newLineHtml);
+      }
+
+      if (self.beatNumber % 4 == 0) {
+        self.previousChordHtml = self.currentChordHtml;
+        let chordNumber = Math.round(self.beatNumber / 4) % 4;
+        self.currentChordHtml = $(self.linesHtml[1].children()[chordNumber]);
+        console.log(self.currentChordHtml);
+
+        if (typeof self.previousChordHtml !== 'undefined') {
+          self.previousChordHtml.removeClass('current-chord').addClass('played-chord');
+        }
+
+        self.currentChordHtml.addClass('current-chord');
+      }
+
+      self.beatNumber += 1;
   };
 
   this.run = function() {
-    update();
-    setInterval(update, 4 * 4 * 60 * 1000 / this.tempo);
+    $('#chords').empty();
+
+    self.lines = [["", "", "", ""]];
+    for (let i = 0; i < 3; ++i) {
+      self.lines.push(self.getNextChordLine());
+    }
+
+    self.linesHtml = [];
+    for (let i = 0; i < this.lines.length; ++i) {
+      let lineHtml = self.makeChordLineHtml(this.lines[i]).addClass("chord-line-" + i);
+      self.linesHtml.push(lineHtml);
+      $('#chords').append(lineHtml);
+    }
+
+    this.beatNumber = 0;
+    this.currentChordHtml = undefined;
+    self.timer = setInterval(update, 60 * 1000 / this.tempo);
+  };
+
+  this.stop = function() {
+    clearInterval(this.timer);
   };
 };
 
-var gen = new RandomChordSequence();
-var scroller = new ChordScroller(gen, 120);
-scroller.run();
+var Metronome = new (function() {
+  this.barClick = function() {
+    document.getElementById('click-1').play();
+  };
+
+  this.click = function() {
+    document.getElementById('click-2').play();
+  };
+
+})();
+
+
+
+var running = false;
+var scroller = undefined;
+
+$('#play-pause').click(function () {
+  var button = $('#play-pause');
+
+  if (running) {
+    button.html('Play!');
+
+    scroller.stop();
+    scroller = undefined;
+  } else {
+    button.html('Stop');
+
+    var gen = new RandomChordSequence();
+    gen.setFifthTransitions($('#fifths-circle-input').is(':checked'));
+    gen.setParallelTonalityTransitions($('#parallel-input').is(':checked'));
+    gen.setOppositeTonalityTransitions($('#contra-parallel-input').is(':checked'));
+    
+    scroller = new ChordScroller(gen, 120);
+    scroller.setTempo(parseInt($('#tempo-input').val()));
+
+    scroller.run();
+  }
+
+  running = !running;
+});

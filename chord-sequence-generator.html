@@ -9,19 +9,24 @@
   <body>
     <div class="settings">
       <h1>Settings</h1>
-      <p>Темп: <input type="number" name="tempo" value="120"/></p>
+      <p>Темп: <input id="tempo-input" type="number" name="tempo" value="120"/></p>
       <p>
         Переходы:
-        <br/><input type="checkbox" name="fifth-circle"/> Квинтовый круг
-        <br/><input type="checkbox" name="parallel"/> Параллельные тональности
-        <br/><input type="checkbox" name="contra-parallel"/> Противоположные тональности
+        <br/><input id="fifths-circle-input" type="checkbox"/> Квинтовый круг
+        <br/><input id="parallel-input" type="checkbox"/> Параллельные тональности
+        <br/><input id="contra-parallel-input" type="checkbox"/> Противоположные тональности
       </p>
+      <button id="play-pause">Play</button>
     </div>
     <div id="chords">
-      lorem ipsum dolor
     </div>
     <script src="js/jquery.min.js"></script>
     <script src="js/teoria.js"></script>
     <script src="js/chord-sequence-generator.js"></script>
+
+    <div id="audioHide">
+      <audio id="click-1" src="audio/click-1.wav" preload="auto" controls="controls"></audio>
+      <audio id="click-2" src="audio/click-2.wav" preload="auto" controls="controls"></audio>
+    </div>
   </body>
 </html>
