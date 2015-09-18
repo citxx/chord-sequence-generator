@@ -3,9 +3,14 @@
   border: solid 2px #dddddd;
   background-color: #eeeeee;
   border-radius: 15px;
-  width: 250px;
+  width: 21vw;
+  min-height: 260px;
+  height: 90vh;
   padding: 10px;
-  margin: 10px;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  margin-left: 10vw;
+  margin-right: 1vw;
 }
 
 .settings h1 {
@@ -13,9 +18,18 @@
 }
 
 #chords {
+  position: relative;
   float: left;
-  margin: 10px;
+  width: 50vw;
+  min-height: 260px;
+  height: 90vh;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  margin-left: 1vw;
+  margin-right: 10vw;
   padding: 10px;
+  border: solid 2px #dddddd;
+  border-radius: 15px;
 }
 
 .current-chord {
@@ -28,10 +42,11 @@
 
 .chord-line {
   height: 30px;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding-left: 0; /*40px;*/
+  padding-right: 0; /*40px;*/
   padding-top: 35px;
   padding-bottom: 35px;
+  right: 5vw;
   transition: top 0.5s, opacity 0.5s;
 }
 
@@ -58,7 +73,7 @@
 }
 
 .chord {
-  width: 150px;
+  width: 10vw;
   display: inline-block;
   font-size: 20pt;
 }

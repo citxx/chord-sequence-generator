@@ -36,9 +36,51 @@ var RandomChordSequence = function() {
     this.callback = callback;
   };
 
+  var chordTypes = ["m7", "7", "maj7"];
+
   this.next = function() {
     this.currentChord = this.nextChord;
-    this.nextChord = teoria.chord.random();
+
+    var candidates = [];
+
+    candidates.push(teoria.chord.random());
+
+    if (this.fifthTransitions) {
+      var baseNotes = [
+        this.currentChord.root.interval(teoria.interval('P5')),
+        this.currentChord.root.interval(teoria.interval('P-5'))
+      ];
+      for (let i = 0; i < baseNotes.length; ++i) {
+        for (let j = 0; j < chordTypes.length; ++j) {
+          candidates.push(teoria.chord(baseNotes[i], chordTypes[j]));
+        }
+      }
+    }
+
+    if (this.parallelTonalityTransitions) {
+      if (this.currentChord.chord === "m7") {
+        let baseNote = this.currentChord.root.iterval(teoria.interval('m3'));
+        candidates.push(teoria.chord(baseNote, "maj7"));
+      }
+      if (this.currentChord.chord === "maj7") {
+        let baseNote = this.currentChord.root.iterval(teoria.interval('m-3'));
+        candidates.push(teoria.chord(baseNote, "m7"));
+      }
+    }
+
+    if (this.oppositeTonalityTransitions) {
+      if (this.currentChord.chord === "m7") {
+        let baseNote = this.currentChord.root.iterval(teoria.interval('M-3'));
+        candidates.push(teoria.chord(baseNote, "maj7"));
+      }
+      if (this.currentChord.chord === "maj7") {
+        let baseNote = this.currentChord.root.iterval(teoria.interval('M3'));
+        candidates.push(teoria.chord(baseNote, "m7"));
+      }
+    }
+
+    let nextChordIndex = Math.floor(Math.random() * candidates.length);
+    this.nextChord = candidates[nextChordIndex];
     return this.currentChord;
   };
 };
